@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ligia Zanchet – Cloud & Security</title>
+  <meta name="description" content="Ligia Zanchet — Cloud & Security enthusiast based in the Netherlands. Learning Azure, Security and AI. Open to Cloud Support/Engineer roles." />
+  <style>
+    :root{
+      --bg: #fff6f8;         /* soft pink background */
+      --ink: #1f2937;        /* dark text */
+      --muted:#6b7280;       /* muted text */
+      --accent:#e75480;      /* rose */
+      --accent-2:#ffd6e3;    /* light rose chip */
+      --link:#e75480;
+      --ring: rgba(231,84,128,.35);
+      --maxw: 980px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--ink); background:linear-gradient(180deg,var(--bg) 0%, #fff 60%);
+      -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    }
+    a{color:var(--link); text-decoration:none}
+    a:focus{outline:3px solid var(--ring); outline-offset:2px; border-radius:6px}
+    .wrap{max-width:var(--maxw); margin:0 auto; padding:32px 20px 56px}
+    header{padding:12vh 0 6vh}
+    h1{font-size:clamp(2rem,6vw,3.25rem); line-height:1.05; margin:0 0 .5rem}
+    .subtitle{font-size:clamp(1.05rem,2.6vw,1.25rem); color:var(--muted)}
+    .chips{display:flex; gap:.5rem; flex-wrap:wrap; margin:1.25rem 0 0}
+    .chip{background:var(--accent-2); color:#7b1b3a; padding:.4rem .7rem; border-radius:999px; font-weight:600; font-size:.9rem}
+    .cta{display:flex; gap:.7rem; flex-wrap:wrap; margin:1.5rem 0 0}
+    .btn{
+      display:inline-flex; align-items:center; gap:.5rem; padding:.8rem 1.15rem; border-radius:999px;
+      background:var(--accent); color:#fff; font-weight:700; border:0; cursor:pointer
+    }
+    .btn.secondary{background:transparent; color:var(--ink); border:2px solid #f2c1d0}
+    .btn:hover{filter:brightness(.95)}
+    section{padding:42px 0; border-top:1px solid #f5e1e8}
+    h2{font-size:1.25rem; letter-spacing:.02em; text-transform:uppercase; color:#7b1b3a; margin:0 0 1rem}
+    .row{display:grid; gap:18px; grid-template-columns:1fr}
+    .card{background:#fff; border:1px solid #f3e0e7; border-radius:14px; padding:18px 18px}
+    .meta{color:var(--muted); font-size:.98rem}
+    .footer{color:var(--muted); font-size:.9rem; padding-top:22px}
+    @media (min-width:760px){
+      .row.two{grid-template-columns:1fr 1fr}
+      .card{padding:22px 22px}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" aria-label="Main content">
+
+    <!-- HERO -->
+    <header>
+      <h1>Ligia Zanchet</h1>
+      <p class="subtitle">Cloud • Security • AI&nbsp;enthusiast — currently learning Azure & Security, with 10 years of Support experience.</p>
+
+      <div class="chips" aria-label="Highlights">
+        <span class="chip">Right now: Azure + Security</span>
+        <span class="chip">Open to Cloud Support/Engineer roles</span>
+        <span class="chip">Netherlands • Remote-friendly</span>
+      </div>
+
+      <div class="cta" role="group" aria-label="Primary actions">
+        <a class="btn" href="mailto:ligia@zanchet.eu?subject=Hello%20Ligia">Email me</a>
+        <a class="btn secondary" href="https://www.linkedin.com/in/ligia-zanchet/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn secondary" href="https://github.com/Lihzanchet" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn secondary" href="/Ligia_Zanchet_Resume.pdf" download target="_blank" rel="noopener">Résumé (PDF)</a>
+      </div>
+    </header>
+
+    <!-- RIGHT NOW / LOCATION -->
+    <section aria-labelledby="rightnow">
+      <h2 id="rightnow">Right now</h2>
+      <div class="row two">
+        <div class="card">
+          <p class="meta"><strong>Learning</strong></p>
+          <p>Hands-on with Azure Fundamentals (AZ-900), security basics (IAM, least privilege, logging), and serverless/API projects. Building a small portfolio while I transition from Support to Cloud.</p>
+        </div>
+        <div class="card">
+          <p class="meta"><strong>Location</strong></p>
+          <p>Netherlands (Utrecht area). Open to hybrid/remote across the EU/UK.</p>
+        </div>
+      </div>
+    </section>
+
+     <!-- ABOUT -->
+    <section aria-labelledby="about">
+      <h2 id="about">About me</h2>
+      <div class="row">
+        <div class="card">
+          <p>For the past 10 years, I've worked in tech, tackling complex problems and improving processes for customers at Atlassian, SAP Ariba, and Dell. I’ve always found satisfaction in translating technical challenges into simple, positive experiences.
+<p></p>
+My passion for problem-solving extends beyond my day job. I'm currently diving into the worlds of <b>Azure Cloud</b>, <b>AI</b>, and <b>Cybersecurity</b> to learn new tools and build personal projects.
+<p>This site is a space for me to track my progress and share what I'm learning along the way.
+ Off-screen you’ll find me in Faerûn, traveling to new countries, or relaxing with my cats 🐾.
+</p>
+  </ul>
+        </div>
+      </div>
+    </section>
+    <!-- LATEST / PLACEHOLDERS YOU CAN UPDATE LATER -->
+    <section aria-labelledby="latest">
+      <h2 id="latest">Latest</h2>
+      <div class="row two">
+        <div class="card">
+          <p class="meta"><strong>Azure static site</strong> • personal domain</p>
+          <p>Hosted this landing on Azure Storage + Cloudflare. HTTPS, custom domain, and a simple CI path to update quickly.</p>
+        </div>
+        <div class="card">
+          <p class="meta"><strong>Next up</strong> • serverless API</p>
+          <p>Building a small serverless sentiment-analysis API as a practice project (AWS Lambda + API Gateway).</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <p>© <span id="y"></span> Ligia Zanchet • <a href="mailto:ligia@zanchet.eu">ligia@zanchet.eu</a></p>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
