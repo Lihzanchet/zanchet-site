@@ -1,0 +1,40 @@
+name: Deploy to Azure Static Website
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Azure CLI
+        uses: azure/cli@v2
+
+      - name: Enable static website + upload to $web
+        env:
+          AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+          AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_KEY }}
+          INDEX_DOC: index.html
+          ERROR_DOC: 404.html
+        run: |
+          set -e
+          az storage blob service-properties update \
+            --account-name "$AZURE_STORAGE_ACCOUNT" \
+            --static-website \
+            --index-document "$INDEX_DOC" \
+            --404-document "$ERROR_DOC" \
+            --account-key "$AZURE_STORAGE_KEY"
+
+          az storage blob upload-batch \
+            --account-name "$AZURE_STORAGE_ACCOUNT" \
+            --account-key "$AZURE_STORAGE_KEY" \
+            -s . \
+            -d '$web' \
+            --overwrite
