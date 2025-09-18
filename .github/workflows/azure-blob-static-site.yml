@@ -17,27 +17,29 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # Uses the JSON you saved in the AZURE_CREDENTIALS secret
-    - name: Quick auth test
-    uses: azure/CLI@v2
-    with:
-      inlineScript: |
-        echo "Subscription / Tenant check:"
-        az account show --query "{subscription:id, tenant:tenantId}" -o tsv
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}   # the full JSON you saved
 
-        echo "Storage account exists?"
-        az storage account show \
-          -n ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
-          --query "name" -o tsv
+      - name: Quick auth test
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            echo "Subscription / Tenant check:"
+            az account show --query "{subscription:id, tenant:tenantId}" -o tsv
 
-        echo "Static website settings:"
-        az storage blob service-properties show \
-          --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
-          --auth-mode login \
-          --query "staticWebsite" -o jsonc
+            echo "Storage account exists?"
+            az storage account show \
+              -n ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
+              --query "name" -o tsv
 
+            echo "Static website settings:"
+            az storage blob service-properties show \
+              --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
+              --auth-mode login \
+              --query "staticWebsite" -o jsonc
 
-      # ✅ Every azure/CLI step MUST have inlineScript:
       - name: Ensure static website settings
         uses: azure/CLI@v2
         with:
@@ -48,7 +50,7 @@ jobs:
               --index-document index.html \
               --404-document 404.html
 
-      # Optional: wipe old files so the container matches your repo exactly
+      # Optional: wipe old files so the container mirrors the repo exactly
       - name: Clean $web container (optional)
         uses: azure/CLI@v2
         with:
@@ -58,7 +60,6 @@ jobs:
               --auth-mode login \
               -s '$web' --pattern '*'
 
-      # Upload the current repo to the $web container
       - name: Upload site to $web
         uses: azure/CLI@v2
         with:
