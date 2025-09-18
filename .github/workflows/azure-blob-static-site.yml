@@ -16,7 +16,6 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -24,14 +23,14 @@ jobs:
       - name: Azure login
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}   # full JSON
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Ensure subscription
         uses: azure/CLI@v2
         with:
           inlineScript: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Length check (no secret printed)
+      # length check catches whitespace/typos in the account secret (won't print the value)
       - name: Inspect AZURE_STORAGE_ACCOUNT secret length
         run: |
           ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'
@@ -39,16 +38,16 @@ jobs:
           ACC_TRIM=$(printf %s "$ACC" | tr -d ' \r\n')
           echo "trim_len=$(printf %s "$ACC_TRIM" | wc -c)"
 
-      # Data-plane sanity (uses AAD auth)
-      - name: Quick data-plane test
+      # ✅ Print context to confirm EXACTLY what we will deploy to
+      - name: Deploy context (whoami + target)
         uses: azure/CLI@v2
+        env:
+          CREDS: ${{ secrets.AZURE_CREDENTIALS }}
+          ACC:   ${{ secrets.AZURE_STORAGE_ACCOUNT }}
         with:
           inlineScript: |
             set -e
-            ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'
+            CLIENT_ID=$(printf '%s' "$CREDS" | sed -n 's/.*"clientId"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
             ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-            echo "Static website settings (data plane):"
-            az storage blob service-properties show \
-              --account-name "$ACC_TRIM" \
-              --auth-mode login \
-              --query "{enabled:staticWebsite.enabled, index:staticWebsite.indexDocument}" -o table || true
+            echo "== Azure account context =="
+            az account show --qu
