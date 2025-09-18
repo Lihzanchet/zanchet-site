@@ -2,8 +2,8 @@ name: Deploy to Azure Blob Static Website
 
 on:
   push:
-    branches: [ main ]      # change if your default branch is different
-  workflow_dispatch:         # lets you run it manually from the Actions tab
+    branches: [ main ]      # change if your default branch differs
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -17,12 +17,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      # Uses the JSON you saved in the AZURE_CREDENTIALS secret
       - name: Azure login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Ensure static website is enabled (safe to run every time)
+      # ✅ Every azure/CLI step MUST have inlineScript:
       - name: Ensure static website settings
         uses: azure/CLI@v2
         with:
@@ -33,7 +34,7 @@ jobs:
               --index-document index.html \
               --404-document 404.html
 
-      # Optional: clean $web so it mirrors the repo exactly
+      # Optional: wipe old files so the container matches your repo exactly
       - name: Clean $web container (optional)
         uses: azure/CLI@v2
         with:
@@ -43,7 +44,7 @@ jobs:
               --auth-mode login \
               -s '$web' --pattern '*'
 
-      # Upload the site (exclude VCS/CI folders)
+      # Upload the current repo to the $web container
       - name: Upload site to $web
         uses: azure/CLI@v2
         with:
