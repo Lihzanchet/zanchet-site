@@ -40,32 +40,26 @@ jobs:
 
       # ✅ Print context to confirm EXACTLY what we will deploy to
       - name: Deploy context (whoami + target)
-  uses: azure/CLI@v2
-  env:
-    CREDS: ${{ secrets.AZURE_CREDENTIALS }}
-    ACC:   ${{ secrets.AZURE_STORAGE_ACCOUNT }}
-  with:
-    inlineScript: |
-      set -e
-      # pull clientId from the JSON secret (masked in logs)
-      CLIENT_ID=$(printf '%s' "$CREDS" | sed -n 's/.*"clientId"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
-      ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-
-      echo "== Azure account context =="
-      az account show -o jsonc
-
-      echo "== Service principal clientId (first 12 chars) =="
-      echo "${CLIENT_ID}" | cut -c1-12
-
-      echo "== Target storage account name =="
-      echo "$ACC_TRIM"
-
-      echo "== Blob endpoint we will hit =="
-      echo "https://${ACC_TRIM}.blob.core.windows.net"
-
-      echo "== Target container =="
-      echo "\$web"
-
+        uses: azure/CLI@v2
+        env:
+          CREDS: ${{ secrets.AZURE_CREDENTIALS }}
+          ACC:   ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        with:
+          inlineScript: |
+            set -e
+            # pull clientId from the JSON secret (masked in logs)
+            CLIENT_ID=$(printf '%s' "$CREDS" | sed -n 's/.*"clientId"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
+            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
+            echo "== Azure account context =="
+            az account show --query "{subscription:id, name:name, tenant:tenantId, principal:user.type}" -o table
+            echo "== Service principal clientId (first 12 chars) =="
+            echo "${CLIENT_ID}" | cut -c1-12
+            echo "== Target storage account name =="
+            echo "$ACC_TRIM"
+            echo "== Blob endpoint we will hit =="
+            echo "https://${ACC_TRIM}.blob.core.windows.net"
+            echo "== Target container =="
+            echo "\$web"
 
       # (Optional) Management-plane peek (needs Reader on the storage account). Won't fail the run.
       - name: (Optional) Show storage account (mgmt plane)
