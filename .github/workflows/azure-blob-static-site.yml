@@ -2,12 +2,16 @@ name: Deploy to Azure Blob Static Website
 
 on:
   push:
-    branches: [ main ]      # change if your default branch differs
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
   id-token: write
   contents: read
+
+concurrency:
+  group: deploy-azure
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -20,15 +24,14 @@ jobs:
       - name: Azure login
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}   # the full JSON you saved
+          creds: ${{ secrets.AZURE_CREDENTIALS }}   # full JSON
 
-      # Make sure we are on the correct subscription
       - name: Ensure subscription
         uses: azure/CLI@v2
         with:
           inlineScript: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # 🔎 LENGTH CHECK (no secret value printed) — catches trailing spaces/newlines/typos
+      # Length check (no secret printed)
       - name: Inspect AZURE_STORAGE_ACCOUNT secret length
         run: |
           ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'
@@ -36,7 +39,7 @@ jobs:
           ACC_TRIM=$(printf %s "$ACC" | tr -d ' \r\n')
           echo "trim_len=$(printf %s "$ACC_TRIM" | wc -c)"
 
-      # ✅ Quick data-plane test (what upload uses). Avoids mgmt-plane 'account show'.
+      # Data-plane sanity (uses AAD auth)
       - name: Quick data-plane test
         uses: azure/CLI@v2
         with:
@@ -49,64 +52,3 @@ jobs:
               --account-name "$ACC_TRIM" \
               --auth-mode login \
               --query "{enabled:staticWebsite.enabled, index:staticWebsite.indexDocument}" -o table || true
-
-            echo "List a few blobs from \$web (data plane):"
-            az storage blob list \
-              --account-name "$ACC_TRIM" \
-              -c '$web' \
-              --num-results 5 \
-              --query "[].{name:name, modified:properties.lastModified}" -o table || true
-
-      # Optional: ensure static website props (data plane). Safe to keep; remove if you prefer.
-      - name: Ensure static website settings
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'
-            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-            az storage blob service-properties update \
-              --account-name "$ACC_TRIM" \
-              --static-website \
-              --index-document index.html \
-              --404-document 404.html
-
-      # Optional: wipe old files so the container mirrors the repo exactly
-      - name: Clean $web container (optional)
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'
-            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-            az storage blob delete-batch \
-              --account-name "$ACC_TRIM" \
-              --auth-mode login \
-              -s '$web' --pattern '*'
-
-      # Upload the current repo to the $web container
-      - name: Upload site to $web
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'
-            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-            az storage blob upload-batch \
-              --account-name "$ACC_TRIM" \
-              --auth-mode login \
-              -d '$web' -s . \
-              --overwrite \
-              --no-progress \
-              --pattern '!**/.git*' \
-              --pattern '!**/.github/**'
-
-      # Proof the new files are there (fresh timestamps)
-      - name: List uploaded files (proof)
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'
-            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-            az storage blob list \
-              --account-name "$ACC_TRIM" \
-              -c '$web' \
-              --num-results 50 \
-              --query "[].{name:name, modified:properties.lastModified}" -o table
