@@ -1,54 +1,36 @@
-name: Azure Auth Diag
-on: { workflow_dispatch: {} }
+- name: Ensure subscription
+  uses: azure/CLI@v2
+  with:
+    inlineScript: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-permissions:
-  id-token: write
-  contents: read
+# Mgmt-plane check (optional): needs Reader; ok to continue on error
+- name: (Optional) Show storage account (mgmt plane)
+  uses: azure/CLI@v2
+  continue-on-error: true
+  with:
+    inlineScript: |
+      ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'
+      ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
+      az storage account show -n "$ACC_TRIM" \
+        --query "{name:name, rg:resourceGroup}" -o table
 
-jobs:
-  diag:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Azure login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+# Data-plane checks (what upload uses)
+- name: Data plane checks
+  uses: azure/CLI@v2
+  with:
+    inlineScript: |
+      set -e
+      ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'
+      ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
+      echo "Static website props (data plane):"
+      az storage blob service-properties show \
+        --account-name "$ACC_TRIM" \
+        --auth-mode login \
+        --query "{enabled:staticWebsite.enabled, index:staticWebsite.indexDocument}" -o table || true
 
-      - name: Ensure subscription
-        uses: azure/CLI@v2
-        with:
-          inlineScript: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      # Management-plane check (optional). If it errors, it's likely missing 'Reader' role. That's OK.
-      - name: (Optional) Show storage account (mgmt plane)
-        uses: azure/CLI@v2
-        continue-on-error: true
-        with:
-          inlineScript: |
-            az storage account show \
-              -n ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
-              --query "{name:name, location:primaryLocation, kind:kind}" -o table
-
-      # Data-plane checks (what we actually need for upload)
-      - name: Data plane checks
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            set -e
-            ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'
-            # Trim whitespace/newlines just in case
-            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-
-            echo "Using storage account (masked in logs)."
-            echo "Static website props:"
-            az storage blob service-properties show \
-              --account-name "$ACC_TRIM" \
-              --auth-mode login \
-              --query "{enabled:staticWebsite.enabled, index:staticWebsite.indexDocument}" -o table || true
-
-            echo "List a few blobs from $web (if exists):"
-            az storage blob list \
-              --account-name "$ACC_TRIM" \
-              -c '$web' \
-              --num-results 10 \
-              --query "[].{name:name, modified:properties.lastModified}" -o table || true
+      echo "List a few blobs from $web (data plane):"
+      az storage blob list \
+        --account-name "$ACC_TRIM" \
+        -c '$web' \
+        --num-results 10 \
+        --query "[].{name:name, modified:properties.lastModified}" -o table || true
