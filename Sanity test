@@ -1,7 +1,0 @@
-- name: Quick auth test
-  uses: azure/CLI@v2
-  with:
-    inlineScript: |
-      az account show --query "{subscription:id, tenant:tenantId}" -o tsv
-      ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'; ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-      az storage blob list --account-name "$ACC_TRIM" -c '$web' --num-results 5 -o table || true
