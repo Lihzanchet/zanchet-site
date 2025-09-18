@@ -1,0 +1,58 @@
+name: Deploy to Azure Blob Static Website
+
+on:
+  push:
+    branches: [ main ]      # change if your default branch is different
+  workflow_dispatch:         # lets you run it manually from the Actions tab
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Ensure static website is enabled (safe to run every time)
+      - name: Ensure static website settings
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az storage blob service-properties update \
+              --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
+              --static-website \
+              --index-document index.html \
+              --404-document 404.html
+
+      # Optional: clean $web so it mirrors the repo exactly
+      - name: Clean $web container (optional)
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az storage blob delete-batch \
+              --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
+              --auth-mode login \
+              -s '$web' --pattern '*'
+
+      # Upload the site (exclude VCS/CI folders)
+      - name: Upload site to $web
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az storage blob upload-batch \
+              --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
+              --auth-mode login \
+              -d '$web' -s . \
+              --overwrite \
+              --no-progress \
+              --pattern '!**/.git*' \
+              --pattern '!**/.github/**'
