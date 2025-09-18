@@ -8,12 +8,12 @@
   uses: azure/CLI@v2
   continue-on-error: true
   with:
-    inlineScript: |
+  inlineScript: |
       ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'
-      ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-      az storage account show -n "$ACC_TRIM" \
-        --query "{name:name, rg:resourceGroup}" -o table
-
+      echo "Length (raw):   $(printf %s "$ACC" | wc -c)"
+      ACC_TRIM=$(printf %s "$ACC" | tr -d ' \r\n')
+      echo "Length (trim):  $(printf %s "$ACC_TRIM" | wc -c)"
+      
 # Data-plane checks (what upload uses)
 - name: Data plane checks
   uses: azure/CLI@v2
