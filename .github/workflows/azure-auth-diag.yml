@@ -1,0 +1,38 @@
+name: Azure Auth Diag
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Check auth + subscription + storage
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            set -e
+            echo "== Account context =="
+            az account show --output table
+
+            echo "== List subscriptions (sanity) =="
+            az account list --output table
+
+            echo "== Show storage account =="
+            az storage account show \
+              -n ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
+              --query "{name:name, location:primaryLocation, kind:kind}" -o table
+
+            echo "== Static website props =="
+            az storage blob service-properties show \
+              --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
+              --auth-mode login \
+              --query "{enabled:staticWebsite.enabled, index:staticWebsite.indexDocument}" -o table
