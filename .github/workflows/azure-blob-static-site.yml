@@ -39,7 +39,7 @@ jobs:
           echo "trim_len=$(printf %s "$ACC_TRIM" | wc -c)"
 
       # ✅ Print context to confirm EXACTLY what we will deploy to
-     - name: Deploy context (whoami + target)
+      - name: Deploy context (whoami + target)
   uses: azure/CLI@v2
   env:
     CREDS: ${{ secrets.AZURE_CREDENTIALS }}
@@ -65,3 +65,117 @@ jobs:
 
       echo "== Target container =="
       echo "\$web"
+
+
+      # (Optional) Management-plane peek (needs Reader on the storage account). Won't fail the run.
+      - name: (Optional) Show storage account (mgmt plane)
+        uses: azure/CLI@v2
+        continue-on-error: true
+        env:
+          ACC:   ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        with:
+          inlineScript: |
+            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
+            az storage account show -n "$ACC_TRIM" \
+              --query "{name:name, rg:resourceGroup, sku:sku.name, kind:kind}" -o table
+
+      # Show what roles the workflow's SP has on the storage account scope
+      - name: Check SP RBAC on storage account
+        uses: azure/CLI@v2
+        env:
+          CREDS: ${{ secrets.AZURE_CREDENTIALS }}
+          SUB:   ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ACC:   ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+          RG:    rg-static-website
+        with:
+          inlineScript: |
+            set -e
+            CLIENT_ID=$(printf '%s' "$CREDS" | sed -n 's/.*"clientId"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
+            OBJID=$(az ad sp show --id "$CLIENT_ID" --query id -o tsv)
+            SCOPE="/subscriptions/$SUB/resourceGroups/$RG/providers/Microsoft.Storage/storageAccounts/$ACC"
+            echo "Scope: $SCOPE"
+            az role assignment list \
+              --assignee-object-id "$OBJID" \
+              --scope "$SCOPE" \
+              --query "[].{role:roleDefinitionName,scope:scope}" -o table
+
+      # Data-plane sanity (uses AAD)
+      - name: Quick data-plane test
+        uses: azure/CLI@v2
+        env:
+          ACC: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        with:
+          inlineScript: |
+            set -e
+            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
+            echo "Static website settings (data plane):"
+            az storage blob service-properties show \
+              --account-name "$ACC_TRIM" \
+              --auth-mode login \
+              --query "{enabled:staticWebsite.enabled, index:staticWebsite.indexDocument}" -o table || true
+
+            echo "List a few blobs from \$web (data plane):"
+            az storage blob list \
+              --account-name "$ACC_TRIM" \
+              --auth-mode login \
+              -c '$web' \
+              --num-results 5 \
+              --query "[].{name:name, modified:properties.lastModified}" -o table || true
+
+      # Ensure static website config (AAD)
+      - name: Ensure static website settings
+        uses: azure/CLI@v2
+        env:
+          ACC: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        with:
+          inlineScript: |
+            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
+            az storage blob service-properties update \
+              --account-name "$ACC_TRIM" \
+              --auth-mode login \
+              --static-website \
+              --index-document index.html \
+              --404-document 404.html
+
+      # Optional: clean $web so container mirrors repo exactly
+      - name: Clean $web container (optional)
+        uses: azure/CLI@v2
+        env:
+          ACC: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        with:
+          inlineScript: |
+            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
+            az storage blob delete-batch \
+              --account-name "$ACC_TRIM" \
+              --auth-mode login \
+              -c '$web' --pattern '*'
+
+      - name: Upload site to $web
+        uses: azure/CLI@v2
+        env:
+          ACC: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        with:
+          inlineScript: |
+            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
+            az storage blob upload-batch \
+              --account-name "$ACC_TRIM" \
+              --auth-mode login \
+              -c '$web' -s . \
+              --overwrite \
+              --no-progress \
+              --pattern '!**/.git*' \
+              --pattern '!**/.github/**'
+
+      - name: List uploaded files (proof)
+        uses: azure/CLI@v2
+        env:
+          ACC: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        with:
+          inlineScript: |
+            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
+            az storage blob list \
+              --account-name "$ACC_TRIM" \
+              --auth-mode login \
+              -c '$web' \
+              --num-results 50 \
+              --query "[].{name:name, modified:properties.lastModified}" -o table
