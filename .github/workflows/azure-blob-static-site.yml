@@ -59,10 +59,8 @@ jobs:
               --destination '$web' \
               --source . \
               --overwrite \
-              --no-progress \
-              --pattern '!**/.git*' \
-              --pattern '!**/.github/**'
-
+              --no-progress 
+           
       - name: List uploaded files (proof)
         uses: azure/CLI@v2
         env:
