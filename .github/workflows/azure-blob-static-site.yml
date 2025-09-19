@@ -130,6 +130,7 @@ jobs:
               --static-website \
               --index-document index.html \
               --404-document 404.html
+              
 
       # Optional: clean $web so container mirrors repo exactly
       - name: Clean $web container (optional)
@@ -173,3 +174,22 @@ jobs:
               -c '$web' \
               --num-results 50 \
               --query "[].{name:name, modified:properties.lastModified}" -o table
+- name: Check SP RBAC on storage account (must have role)
+  uses: azure/CLI@v2
+  env:
+    CREDS: ${{ secrets.AZURE_CREDENTIALS }}
+    SUB:   ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    ACC:   ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+    RG:    rg-static-website   # <-- change if your RG name is different
+  with:
+    inlineScript: |
+      set -e
+      CLIENT_ID=$(printf '%s' "$CREDS" | sed -n 's/.*"clientId"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
+      SCOPE="/subscriptions/$SUB/resourceGroups/$RG/providers/Microsoft.Storage/storageAccounts/$ACC"
+      echo "Scope: $SCOPE"
+      ROLES=$(az role assignment list --assignee "$CLIENT_ID" --scope "$SCOPE" --query "[].roleDefinitionName" -o tsv)
+      echo "Roles at scope:" $ROLES
+      if [ -z "$ROLES" ] || ! echo "$ROLES" | grep -q "Storage Blob Data"; then
+        echo "::error::Service principal lacks 'Storage Blob Data Contributor' on $SCOPE. Assign it in Portal: Storage account → Access control (IAM) → Add role assignment → Storage Blob Data Contributor → select your app by CLIENT ID."
+        exit 1
+      fi
