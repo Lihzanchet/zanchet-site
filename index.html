@@ -140,26 +140,12 @@
 <section aria-labelledby="latest">
   <h2 id="latest">Latest</h2>
 
-  <!-- Two columns: left = latest list (script), right = Next up card -->
-  <div class="row two">
-    <!-- LEFT: latest items injected by JS -->
-    <div id="latest-list">
-      <!-- JS will inject the 2 newest updates here -->
-        <p style="margin-top:10px">
-            </p>
+  <!-- Two newest items side by side on desktop, stacked on mobile -->
+  <div id="latest-list" class="row two"></div>
+
+  <p style="margin-top:10px">
     <a class="btn ghost" href="/updates.html">See all updates</a>
   </p>
-    </div>
-
-    <!-- RIGHT: Next up card -->
-    <div class="card">
-      <p class="meta"><strong>Next up</strong> • Trip Pack Planner (AI)</p>
-      <p>A tiny AI helper that suggests how many clothing items to pack based on destination, dates, weather, activities, and laundry access.</p>
-      <p><a class="btn ghost" href="/project.html">See Projects</a></p>
-    </div>
-  </div>
-
-
 </section>
 
 <script>
@@ -168,7 +154,7 @@
     const res = await fetch('/data/updates.json', { cache: 'no-store' });
     const items = await res.json();
 
-    // sort by date desc, take top 2
+    // newest first, take top 2
     const latest = [...items]
       .sort((a,b) => new Date(b.date) - new Date(a.date))
       .slice(0, 2);
@@ -209,6 +195,7 @@
   </script>
 </body>
 </html>
+
 
 
 
