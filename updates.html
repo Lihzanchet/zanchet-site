@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Updates – Ligia Zanchet</title>
+  <meta name="description" content="A running diary of updates and learnings." />
+  <style>
+    :root{ --bg:#fff6f8; --ink:#1f2937; --muted:#6b7280; --accent:#e75480; --accent-2:#ffd6e3; --link:#e75480; --ring:rgba(231,84,128,.35); --maxw:980px; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; min-height:100vh; display:flex; flex-direction:column;
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--ink); background:linear-gradient(180deg,var(--bg) 0%, #fff 60%);
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    }
+    a{color:var(--link); text-decoration:none}
+    .wrap{flex:1; display:flex; flex-direction:column; max-width:var(--maxw); margin:0 auto; padding:32px 20px 56px}
+
+    .tabs{display:flex; gap:.6rem; flex-wrap:wrap; margin:12px 0 8px}
+    .btn{display:inline-flex; align-items:center; padding:.8rem 1.15rem; border-radius:999px; background:var(--accent); color:#fff; font-weight:700; border:0; cursor:pointer}
+    .btn.ghost{background:transparent; color:var(--ink); border:2px solid #f2c1d0}
+    .btn:hover{filter:brightness(.95)}
+    .btn.current{background:var(--accent); color:#fff; border:0}
+
+    header{padding:8vh 0 2vh}
+    h1{font-size:clamp(2rem,6vw,3.25rem); line-height:1.05; margin:0 0 .5rem}
+    .subtitle{font-size:clamp(1.05rem,2.6vw,1.25rem); color:var(--muted)}
+    h2{font-size:1.25rem; letter-spacing:.02em; text-transform:uppercase; color:#7b1b3a; margin:28px 0 12px}
+    .section{padding:10px 0 28px; border-top:1px solid #f5e1e8}
+    .row{display:grid; gap:18px; grid-template-columns:1fr}
+    @media (min-width:760px){ .row.two{grid-template-columns:1fr 1fr} }
+    .card{background:#fff; border:1px solid #f3e0e7; border-radius:14px; padding:18px}
+    .meta{color:var(--muted); font-size:.98rem}
+    .chip{background:var(--accent-2); color:#7b1b3a; padding:.28rem .55rem; border-radius:999px; font-weight:600; font-size:.82rem; margin:0 .35rem .35rem 0; display:inline-block}
+    .footer{color:var(--muted); font-size:.9rem; padding-top:22px; margin-top:auto}
+  </style>
+</head>
+<body>
+  <main class="wrap" aria-label="Updates">
+    <nav class="tabs" aria-label="Primary">
+      <a class="btn ghost" href="/">Home</a>
+      <a class="btn ghost" href="/project.html">Projects</a>
+      <a class="btn ghost" href="/certifications.html">Certifications</a>
+      <a class="btn current" href="/updates.html" aria-current="page">Updates</a>
+    </nav>
+
+    <header>
+      <h1>Updates</h1>
+      <p class="subtitle">All the changes and learnings as I build this site and my portfolio.</p>
+    </header>
+
+    <section class="section" aria-labelledby="log">
+      <h2 id="log">Timeline</h2>
+      <div id="updates-list" class="row two"></div>
+    </section>
+
+    <div class="footer">
+      <p>© <span id="y"></span> Ligia Zanchet • <a href="mailto:ligia@zanchet.eu">ligia@zanchet.eu</a></p>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    (async () => {
+      try{
+        const res = await fetch('/data/updates.json', { cache: 'no-store' });
+        const items = await res.json();
+        const sorted = items.sort((a,b)=> new Date(b.date) - new Date(a.date));
+
+        const list = document.getElementById('updates-list');
+        list.innerHTML = sorted.map(item => {
+          const tagHtml = (item.tags||[]).map(t=>`<span class="chip">${t}</span>`).join('');
+          const link = (item.linkHref && item.linkText) ? `<p><a class="btn ghost" href="${item.linkHref}">${item.linkText}</a></p>` : '';
+          const dateText = new Date(item.date).toLocaleDateString();
+          return `
+            <div class="card">
+              <p class="meta"><strong>${item.title}</strong> • ${dateText}</p>
+              <p>${item.summary}</p>
+              <div>${tagHtml}</div>
+              ${link}
+            </div>`;
+        }).join('');
+      } catch(e){
+        console.error(e);
+        document.getElementById('updates-list').innerHTML = `
+          <div class="card"><p class="meta"><strong>Couldn’t load updates</strong></p>
+          <p>Refresh the page and try again.</p></div>`;
+      }
+    })();
+  </script>
+</body>
+</html>
