@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projects – Ligia Zanchet</title>
+  <meta name="description" content="Projects by Ligia Zanchet — Cloud, Security, and AI." />
+  <style>
+    :root{ --bg:#fff6f8; --ink:#1f2937; --muted:#6b7280; --accent:#e75480; --accent-2:#ffd6e3; --link:#e75480; --ring:rgba(231,84,128,.35); --maxw:980px; }
+    *{box-sizing:border-box}
+    body{ margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--ink); background:linear-gradient(180deg,var(--bg) 0%, #fff 60%); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+    a{color:var(--link); text-decoration:none}
+    .wrap{max-width:var(--maxw); margin:0 auto; padding:32px 20px 56px}
+
+    .tabs{display:flex; gap:.6rem; flex-wrap:wrap; margin:12px 0 8px}
+    .btn{display:inline-flex; align-items:center; padding:.8rem 1.15rem; border-radius:999px; background:var(--accent); color:#fff; font-weight:700; border:0; cursor:pointer}
+    .btn.ghost{background:transparent; color:var(--ink); border:2px solid #f2c1d0}
+    .btn:hover{filter:brightness(.95)}
+    .btn.current{background:var(--accent); color:#fff; border:0}
+
+    header{padding:8vh 0 2vh}
+    h1{font-size:clamp(2rem,6vw,3.25rem); line-height:1.05; margin:0 0 .5rem}
+    .subtitle{font-size:clamp(1.05rem,2.6vw,1.25rem); color:var(--muted)}
+    h2{font-size:1.25rem; letter-spacing:.02em; text-transform:uppercase; color:#7b1b3a; margin:28px 0 12px}
+    .section{padding:10px 0 28px; border-top:1px solid #f5e1e8}
+
+    .row{display:grid; gap:18px; grid-template-columns:1fr}
+    @media (min-width:760px){ .row.two{grid-template-columns:1fr 1fr} }
+    .card{background:#fff; border:1px solid #f3e0e7; border-radius:14px; padding:18px}
+    .meta{color:var(--muted); font-size:.98rem}
+    .chip{background:var(--accent-2); color:#7b1b3a; padding:.28rem .55rem; border-radius:999px; font-weight:600; font-size:.82rem; margin-right:.35rem}
+    .footer{color:var(--muted); font-size:.9rem; padding-top:22px}
+
+    /* simple placeholder preview box */
+    .preview{border:1px dashed #f2c1d0; border-radius:12px; background:#fff; padding:12px; display:grid; place-items:center; min-height:150px}
+    .grid{display:grid; gap:10px}
+    .input{display:flex; flex-direction:column; gap:.25rem}
+    input, select{padding:.7rem .9rem; border:1px solid #f3e0e7; border-radius:10px; font:inherit}
+    label{font-weight:700; font-size:.92rem}
+  </style>
+</head>
+<body>
+  <main class="wrap" aria-label="Projects">
+    <!-- Tabs -->
+    <nav class="tabs" aria-label="Primary">
+      <a class="btn ghost" href="/">Home</a>
+      <a class="btn current" href="/project.html" aria-current="page">Projects</a>
+      <a class="btn ghost" href="/certifications.html">Certifications</a>
+    </nav>
+
+    <header>
+      <h1>Projects</h1>
+      <p class="subtitle">Small, practical things that teach me Cloud, Security, and AI by building.</p>
+    </header>
+
+    <!-- FEATURED: Trip Pack Planner (AI) -->
+    <section class="section" aria-labelledby="packai">
+      <h2 id="packai">Featured · Trip Pack Planner (AI) — coming soon</h2>
+      <div class="row two">
+        <div class="card">
+          <p class="meta"><strong>What it does</strong></p>
+          <p>An AI helper that suggests a packing list (counts of tops, bottoms, layers, shoes, etc.) based on destination, dates, forecast, activities, and laundry access.</p>
+          <p class="meta"><strong>Planned stack</strong></p>
+          <p>Static UI (this site) + serverless API for weather & reasoning. Deployed on Azure; GitHub Actions CI.</p>
+          <div>
+            <span class="chip">AI</span><span class="chip">Weather</span><span class="chip">Azure</span><span class="chip">Serverless</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="preview">
+            <div class="grid" style="width:100%; max-width:420px">
+              <div class="input"><label>Destination</label><input placeholder="e.g., Porto, PT"></div>
+              <div class="input"><label>Dates</label><input placeholder="Start → End"></div>
+              <div class="input"><label>Activities</label><input placeholder="Work, hiking, dinners…"></div>
+              <div class="input"><label>Laundry access</label>
+                <select><option>None</option><option>Hotel</option><option>Airbnb</option><option>Friends/Family</option></select>
+              </div>
+              <button class="btn" type="button" disabled>Get packing plan (soon)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- More projects (add as you build) -->
+    <section class="section" aria-labelledby="more">
+      <h2 id="more">More</h2>
+      <div class="row two">
+        <div class="card">
+          <p class="meta"><strong>Azure static site + CI</strong></p>
+          <p>This website on Azure Storage ($web) with GitHub Actions CI using AAD.</p>
+          <div><span class="chip">Azure</span><span class="chip">CI/CD</span></div>
+        </div>
+        <div class="card">
+          <p class="meta"><strong>Certs gallery</strong></p>
+          <p>Grouped, clickable certifications gallery with badges.</p>
+          <div><span class="chip">UI</span><span class="chip">Accessibility</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <p>© <span id="y"></span> Ligia Zanchet • <a href="mailto:ligia@zanchet.eu">ligia@zanchet.eu</a></p>
+    </div>
+  </main>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
