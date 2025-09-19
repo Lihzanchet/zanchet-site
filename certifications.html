@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Certifications – Ligia Zanchet</title>
+  <meta name="description" content="Cloud, Security and AI certifications held by Ligia Zanchet." />
+  <style>
+    :root{
+      --bg:#fff6f8; --ink:#1f2937; --muted:#6b7280; --accent:#e75480; --accent-2:#ffd6e3; --link:#e75480; --ring:rgba(231,84,128,.35);
+      --maxw:980px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--ink); background:linear-gradient(180deg,var(--bg) 0%, #fff 60%);
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    }
+    a{color:var(--link); text-decoration:none}
+    .wrap{max-width:var(--maxw); margin:0 auto; padding:32px 20px 56px}
+
+    /* Tabs (same as index) */
+    .tabs{display:flex; gap:.6rem; flex-wrap:wrap; margin:12px 0 8px}
+    .btn{display:inline-flex; align-items:center; padding:.8rem 1.15rem; border-radius:999px; background:var(--accent); color:#fff; font-weight:700; border:0; cursor:pointer}
+    .btn.ghost{background:transparent; color:var(--ink); border:2px solid #f2c1d0}
+    .btn:hover{filter:brightness(.95)}
+    .btn.current{background:var(--accent); color:#fff; border:0}
+
+    header{padding:8vh 0 2vh}
+    h1{font-size:clamp(2rem,6vw,3.25rem); line-height:1.05; margin:0 0 .5rem}
+    .subtitle{font-size:clamp(1.05rem,2.6vw,1.25rem); color:var(--muted)}
+    h2{font-size:1.25rem; letter-spacing:.02em; text-transform:uppercase; color:#7b1b3a; margin:28px 0 12px}
+    .section{padding:10px 0 28px; border-top:1px solid #f5e1e8}
+
+    /* Grid + cards */
+    .cert-grid{display:grid; gap:16px; grid-template-columns:repeat(2,1fr)}
+    @media (min-width:720px){ .cert-grid{grid-template-columns:repeat(3,1fr)} }
+    @media (min-width:980px){ .cert-grid{grid-template-columns:repeat(4,1fr)} }
+
+    .cert-card{
+      background:#fff; border:1px solid #f3e0e7; border-radius:14px; padding:12px;
+      display:flex; flex-direction:column; gap:.5rem; transition:transform .12s ease, box-shadow .12s ease;
+    }
+    .cert-card:hover{ transform:translateY(-2px); box-shadow:0 6px 18px rgba(231,84,128,.12) }
+
+    .badge-wrap{
+      border:1px dashed #f2c1d0; background:#fff; border-radius:12px; padding:10px;
+      display:grid; place-items:center;
+    }
+    .badge{
+      width:100%; max-width:160px; height:auto; object-fit:contain; display:block;
+    }
+
+    .title{font-weight:800; margin:.1rem 0 .15rem}
+    .meta{color:var(--muted); font-size:.92rem}
+    .chips{display:flex; gap:.35rem; flex-wrap:wrap; margin-top:.25rem}
+    .chip{background:var(--accent-2); color:#7b1b3a; padding:.28rem .55rem; border-radius:999px; font-weight:600; font-size:.82rem}
+    .footer{color:var(--muted); font-size:.9rem; padding-top:22px}
+  </style>
+</head>
+<body>
+  <main class="wrap" aria-label="Certifications">
+    <!-- Tabs -->
+    <nav class="tabs" aria-label="Primary">
+      <a class="btn ghost" href="/">Home</a>
+      <a class="btn ghost" href="/project.html">Projects</a> <!-- or /projects.html if you renamed -->
+      <a class="btn current" href="/certifications.html" aria-current="page">Certifications</a>
+    </nav>
+
+    <header>
+      <h1>Certifications</h1>
+      <p class="subtitle"></p>
+    </header>
+
+    <!-- Atlassian -->
+    <section class="section" aria-labelledby="azure">
+      <h2 id="azure">Atlassian </h2>
+      <div class="cert-grid">
+        <!-- Example card -->
+        <article class="cert-card">
+          <a class="badge-wrap" href="https://cp.certmetrics.com/atlassian/en/public/badge/r?id=317591&date=2025-8-3" target="_blank" rel="noopener">
+            <img class="badge" src="/img/certs/36.png" alt="Atlassian Certified Administration Expert">
+          </a>
+          <div class="title">Atlassian Certified Administration Expert</div>
+          <div class="meta">Atlassian • <time datetime="2025-08">2025</time></div>
+          <div class="chips"><span class="chip">Atlassian</span><span class="chip">Designation</span></div>
+        </article>
+           <article class="cert-card">
+          <a class="badge-wrap" href="https://cp.certmetrics.com/atlassian/en/public/badge/c?id=70121:4c4989ce-ce3f-46c9-bc92-0c8aa140980c&ccat=26&date=2023-10-26" target="_blank" rel="noopener">
+            <img class="badge" src="/img/certs/37.png" alt="Atlassian Certified Agile DevOps Specialist">
+          </a>
+          <div class="title">Atlassian Certified Agile DevOps Specialist</div>
+          <div class="meta">Atlassian • <time datetime="2025-05"> 2025</time></div>
+          <div class="chips"><span class="chip">Atlassian</span><span class="chip">Designation</span></div>
+        </article>
+
+        <article class="cert-card">
+          <a class="badge-wrap" href="https://cp.certmetrics.com/atlassian/en/public/badge/c?id=70121:4c4989ce-ce3f-46c9-bc92-0c8aa140980c&ccat=34&date=2025-8-3" target="_blank" rel="noopener">
+            <img class="badge" src="/img/certs/34.png" alt="Atlassian Certified Jira Service Project Manager">
+          </a>
+          <div class="title">Atlassian Certified Jira Service Project Manager</div>
+          <div class="meta">Atlassian • <time datetime="2025-08"> 2025</time></div>
+          <div class="chips"><span class="chip">Atlassian</span><span class="chip">Professional</span></div>
+        </article>
+
+        <article class="cert-card">
+          <a class="badge-wrap" href="https://cp.certmetrics.com/atlassian/en/public/badge/c?id=70121:4c4989ce-ce3f-46c9-bc92-0c8aa140980c&ccat=52&date=2024-3-28" target="_blank" rel="noopener">
+            <img class="badge" src="/img/certs/52.png" alt="Atlassian Certified in Cloud Organization Admin">
+          </a>
+          <div class="title">Atlassian Certified in Cloud Organization Admin</div>
+          <div class="meta">Atlassian • <time datetime="2024-03"> 2024</time></div>
+          <div class="chips"><span class="chip">Atlassian</span><span class="chip">Professional</span></div>
+        </article>
+        
+            <article class="cert-card">
+          <a class="badge-wrap" href="https://cp.certmetrics.com/atlassian/en/public/badge/c?id=70121:4c4989ce-ce3f-46c9-bc92-0c8aa140980c&ccat=30&date=2024-3-28" target="_blank" rel="noopener">
+            <img class="badge" src="/img/certs/30.png" alt="Atlassian Certified in Managing Jira Projects for Cloud">
+          </a>
+          <div class="title">Atlassian Certified in Managing Jira Projects for Cloud</div>
+          <div class="meta">Atlassian • <time datetime="2024-03"> 2024</time></div>
+          <div class="chips"><span class="chip">Atlassian</span><span class="chip">Professional</span></div>
+        </article>
+          
+             <article class="cert-card">
+          <a class="badge-wrap" href="https://cp.certmetrics.com/atlassian/en/public/badge/c?id=70121:4c4989ce-ce3f-46c9-bc92-0c8aa140980c&ccat=26&date=2023-10-26" target="_blank" rel="noopener">
+            <img class="badge" src="/img/certs/26.png" alt="Atlassian Certified in Managing Jira Projects for Cloud">
+          </a>
+          <div class="title">Atlassian Certified Jira Administrator for Cloud</div>
+          <div class="meta">Atlassian • <time datetime="2023-03"> 2023</time></div>
+          <div class="chips"><span class="chip">Atlassian</span><span class="chip">Professional</span></div>
+        </article>
+        
+        <article class="cert-card">
+          <a class="badge-wrap" href="https://cp.certmetrics.com/atlassian/en/public/badge/c?id=70121:4c4989ce-ce3f-46c9-bc92-0c8aa140980c&ccat=63&date=2025-5-28" target="_blank" rel="noopener">
+            <img class="badge" src="/img/certs/63.png" alt="Atlassian Certified in Confluence Essentials">
+          </a>
+          <div class="title">Atlassian Certified in Confluence Essentials</div>
+          <div class="meta">Atlassian • <time datetime="2025-05"> 2025</time></div>
+          <div class="chips"><span class="chip">Atlassian</span><span class="chip">Associate</span></div>
+        </article>
+            
+   <article class="cert-card">
+          <a class="badge-wrap" href="https://cp.certmetrics.com/atlassian/en/public/badge/c?id=70121:4c4989ce-ce3f-46c9-bc92-0c8aa140980c&ccat=63&date=2025-5-28" target="_blank" rel="noopener">
+            <img class="badge" src="/img/certs/58.png" alt="Atlassian Certified in Jira Software Essentials">
+          </a>
+          <div class="title">Atlassian Certified in Jira Software Essentials</div>
+          <div class="meta">Atlassian • <time datetime="2023-10"> 2023</time></div>
+          <div class="chips"><span class="chip">Atlassian</span><span class="chip">Associate</span></div>
+        </article>
+            
+   <article class="cert-card">
+          <a class="badge-wrap" href="https://cp.certmetrics.com/atlassian/en/public/badge/c?id=70121:4c4989ce-ce3f-46c9-bc92-0c8aa140980c&ccat=59&date=2023-11-8" target="_blank" rel="noopener">
+            <img class="badge" src="/img/certs/59.png" alt="Atlassian Certified in Jira Software Board Configuration">
+          </a>
+          <div class="title">Atlassian Certified in Jira Software Board Configuration</div>
+          <div class="meta">Atlassian • <time datetime="2023-05"> 2023</time></div>
+          <div class="chips"><span class="chip">Atlassian</span><span class="chip">Associate</span></div>
+        </article>
+            
+   <article class="cert-card">
+          <a class="badge-wrap" href="https://cp.certmetrics.com/atlassian/en/public/badge/c?id=70121:4c4989ce-ce3f-46c9-bc92-0c8aa140980c&ccat=61&date=2024-12-17" target="_blank" rel="noopener">
+            <img class="badge" src="/img/certs/63.png" alt="Atlassian Certified in Cloud Foundations">
+          </a>
+          <div class="title">Atlassian Certified in Cloud Foundations</div>
+          <div class="meta">Atlassian • <time datetime="2024-12"> 2024</time></div>
+          <div class="chips"><span class="chip">Atlassian</span><span class="chip">Associate</span></div>
+        </article>
+            
+</section>
+
+    
+    <!-- OTHER -->
+    <section class="section" aria-labelledby="other">
+      <h2 id="other">Other</h2>
+      <div class="cert-grid">
+        <article class="cert-card">
+          <a class="badge-wrap" href="https://www.credly.com/" target="_blank" rel="noopener">
+            <img class="badge" src="/img/certs/az-305.png" alt="
+ITIL® Foundation Certificate in IT Service Management (ITILF)">
+          </a>
+          <div class="title">ITIL® Foundation</div>
+          <div class="meta">EXIN • <time datetime="2026-08">2017</time></div>
+          <div class="chips"><span class="chip">Architecture</span><span class="chip">Azure</span></div>
+        </article>
+      </div>
+    </section>
+
+    <div class="footer">
+      <p>© <span id="y"></span> Ligia Zanchet • <a href="mailto:ligia@zanchet.eu">ligia@zanchet.eu</a></p>
+    </div>
+  </main>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
