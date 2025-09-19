@@ -30,12 +30,13 @@ jobs:
         with:
           inlineScript: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: (One-time safe) Ensure static website settings
+      - name: Ensure static website settings (AAD)
         uses: azure/CLI@v2
         env:
           ACC: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
         with:
           inlineScript: |
+            set -e
             ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
             az storage blob service-properties update \
               --account-name "$ACC_TRIM" \
@@ -43,6 +44,21 @@ jobs:
               --static-website \
               --index-document index.html \
               --404-document 404.html
+
+      - name: Ensure $web container exists (AAD)
+        uses: azure/CLI@v2
+        env:
+          ACC: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        with:
+          inlineScript: |
+            set -e
+            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
+            az storage container create \
+              --account-name "$ACC_TRIM" \
+              --auth-mode login \
+              --name '$web' \
+              --public-access off \
+              --fail-on-exist false
 
       - name: Upload site to $web (AAD)
         uses: azure/CLI@v2
