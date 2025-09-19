@@ -84,7 +84,9 @@
       <div class="hero-grid">
         <div>
           <h1>Ligia Zanchet</h1>
-          <p class="subtitle">Cloud • Security • AI&nbsp;enthusiast — currently learning Azure & Security, with 10 years of Support experience.</p>
+          <p class="subtitle">
+              Welcome to my Portifolio. <br> 
+              Cloud • Security • AI&nbsp;enthusiast — currently learning Azure & Security, with 10 years of Support experience.</p>
 
           <div class="chips">
             <span class="chip">Right now: Azure + Security</span>
@@ -96,7 +98,7 @@
             <a class="btn" href="mailto:ligia@zanchet.eu?subject=Hello%20Ligia">Email me</a>
             <a class="btn ghost" href="https://www.linkedin.com/in/ligia-zanchet/" target="_blank" rel="noopener">LinkedIn</a>
             <a class="btn ghost" href="https://github.com/Lihzanchet" target="_blank" rel="noopener">GitHub</a>
-            <a class="btn ghost" href="/Ligia_Zanchet_Resume.pdf" download target="_blank" rel="noopener">Résumé (PDF)</a>
+            <a class="btn ghost" href="/Ligia_Zanchet_Resume.pdf" download target="_blank" rel="noopener">Resume</a>
           </div>
         </div>
 
@@ -134,20 +136,68 @@
       </div>
     </section>
 
-    <!-- LATEST -->
-    <section aria-labelledby="latest">
-      <h2 id="latest">Latest</h2>
-      <div class="row two">
+<!-- LATEST -->
+<section aria-labelledby="latest">
+  <h2 id="latest">Latest</h2>
+
+  <!-- Two columns: left = latest list (script), right = Next up card -->
+  <div class="row two">
+    <!-- LEFT: latest items injected by JS -->
+    <div id="latest-list">
+      <!-- JS will inject the 2 newest updates here -->
+        <p style="margin-top:10px">
+            </p>
+    <a class="btn ghost" href="/updates.html">See all updates</a>
+  </p>
+    </div>
+
+    <!-- RIGHT: Next up card -->
+    <div class="card">
+      <p class="meta"><strong>Next up</strong> • Trip Pack Planner (AI)</p>
+      <p>A tiny AI helper that suggests how many clothing items to pack based on destination, dates, weather, activities, and laundry access.</p>
+      <p><a class="btn ghost" href="/project.html">See Projects</a></p>
+    </div>
+  </div>
+
+
+</section>
+
+<script>
+(async () => {
+  try {
+    const res = await fetch('/data/updates.json', { cache: 'no-store' });
+    const items = await res.json();
+
+    // sort by date desc, take top 2
+    const latest = [...items]
+      .sort((a,b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 2);
+
+    const wrap = document.getElementById('latest-list');
+    wrap.innerHTML = latest.map(item => {
+      const tags = (item.tags||[]).map(t => `<span class="chip">${t}</span>`).join('');
+      const link = (item.linkHref && item.linkText)
+        ? `<p><a class="btn ghost" href="${item.linkHref}">${item.linkText}</a></p>` : '';
+      const dateText = new Date(item.date).toLocaleDateString();
+      return `
         <div class="card">
-          <p class="meta"><strong>Azure static site</strong> • personal domain</p>
-          <p>Hosted this landing on Azure Storage + Cloudflare. HTTPS, custom domain, and a simple CI path to update quickly.</p>
+          <p class="meta"><strong>${item.title}</strong> • ${dateText}</p>
+          <p>${item.summary}</p>
+          <div>${tags}</div>
+          ${link}
         </div>
-        <div class="card">
-          <p class="meta"><strong>Next up</strong> • serverless API</p>
-          <p>Building a small serverless sentiment-analysis API as a practice project (AWS Lambda + API Gateway).</p>
-        </div>
-      </div>
-    </section>
+      `;
+    }).join('');
+  } catch (e) {
+    console.error(e);
+    document.getElementById('latest-list').innerHTML = `
+      <div class="card">
+        <p class="meta"><strong>Couldn’t load updates</strong></p>
+        <p>Try refreshing the page.</p>
+      </div>`;
+  }
+})();
+</script>
 
     <div class="footer">
       <p>© <span id="y"></span> Ligia Zanchet • <a href="mailto:ligia@zanchet.eu">ligia@zanchet.eu</a></p>
@@ -159,7 +209,6 @@
   </script>
 </body>
 </html>
-
 
 
 
