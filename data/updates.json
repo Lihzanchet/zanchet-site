@@ -8,11 +8,9 @@
   {
     "date": "2025-09-19",
     "title": "Latest → powered by JSON + archive page",
-    "summary": "Home now shows the 2 newest updates side by side. Added an Updates page that renders the full timeline.",
+    "summary": "Home now automatically shows the 2 newest updates side by side. Added an Updates page that renders the full timeline.",
     "tags": ["UI", "JS"],
-    "linkHref": "/updates.html",
-    "linkText": "See all updates"
-  },
+    },
   {
     "date": "2025-09-19",
     "title": "CI/CD to Azure ($web) is live",
