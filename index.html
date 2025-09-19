@@ -61,16 +61,19 @@ a{ color:var(--link); text-decoration:none; }
     .btn.current{background:var(--accent); color:#fff; border:0}
 
     header{padding:6vh 0 4vh}
-   h1{ font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1.05; margin:  0 .5rem; }
-.subtitle{ font-size: clamp(1.05rem, 2.2vw, 1.25rem); color: var(--muted); max-width: 70ch; }
-
+    h1{font-size:clamp(2rem,6vw,3.25rem); line-height:1.05; margin:0 0 .5rem}
+    .subtitle{font-size:clamp(1.05rem,2.6vw,1.25rem); color:var(--muted)}
     .chips{display:flex; gap:.5rem; flex-wrap:wrap; margin:1.25rem 0 0}
     .chip{background:var(--accent-2); color:#7b1b3a; padding:.4rem .7rem; border-radius:999px; font-weight:600; font-size:.9rem}
     .cta{display:flex; gap:.7rem; flex-wrap:wrap; margin:1.5rem 0 0}
 
     section{padding:42px 0; border-top:1px solid #f5e1e8}
-    h2{font-size:1.rem; letter-spacing:.02em; text-transform:uppercase; color:#7b1b3a; margin:0 0 1rem}
-.row{ display: grid; gap: 20px; grid-template-columns: 1fr; }
+    h2{font-size:1.25rem; letter-spacing:.02em; text-transform:uppercase; color:#7b1b3a; margin:0 0 1rem}
+    .row{display:grid; gap:18px; grid-template-columns:1fr}
+    .card{background:#fff; border:1px solid #f3e0e7; border-radius:14px; padding:18px 18px}
+    .meta{color:var(--muted); font-size:.98rem}
+    .footer{color:var(--muted); font-size:.9rem; padding-top:22px}
+
 
 @media (min-width: 980px){
   .photo-wrap{
