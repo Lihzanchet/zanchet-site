@@ -1,0 +1,26 @@
+[
+  {
+    "date": "2025-09-19",
+    "title": "Live CI to Azure",
+    "summary": "Site now deploys automatically to Azure Blob Static Website on each push to main using AAD.",
+    "tags": ["Azure", "CI/CD"],
+    "linkHref": "/project.html",
+    "linkText": "See Projects"
+  },
+  {
+    "date": "2025-09-19",
+    "title": "Certifications page",
+    "summary": "New page with grouped, clickable badge images (Atlassian, ITIL/EXIN).",
+    "tags": ["UI", "Certs"],
+    "linkHref": "/certifications.html",
+    "linkText": "Open Certifications"
+  },
+  {
+    "date": "2025-09-19",
+    "title": "Trip Pack Planner (AI) — planned",
+    "summary": "Idea for an AI that suggests how many clothing items to pack based on destination, weather and laundry access.",
+    "tags": ["AI", "Planning"],
+    "linkHref": "/project.html",
+    "linkText": "View plan"
+  }
+]
