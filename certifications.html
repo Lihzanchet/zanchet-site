@@ -6,18 +6,41 @@
   <title>Certifications – Ligia Zanchet</title>
   <meta name="description" content="Cloud, Security and AI certifications held by Ligia Zanchet." />
   <style>
-    :root{
-      --bg:#fff6f8; --ink:#1f2937; --muted:#6b7280; --accent:#e75480; --accent-2:#ffd6e3; --link:#e75480; --ring:rgba(231,84,128,.35);
-      --maxw:980px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      color:var(--ink); background:linear-gradient(180deg,var(--bg) 0%, #fff 60%);
-      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-    }
-    a{color:var(--link); text-decoration:none}
-    .wrap{max-width:var(--maxw); margin:0 auto; padding:32px 20px 56px}
+   :root{
+  /* Tea & Romance */
+  --ivory:#f9f1f0;
+  --marsala:#663635;
+  --rosewater:#e1999f;
+  --dusty-rose:#deb3ad;
+
+  /* Site tokens mapped to the palette */
+  --bg: var(--ivory);
+  --ink: var(--marsala);
+  --muted:#8d6a69;                 /* soft marsala for secondary text */
+  --accent: var(--rosewater);       /* buttons / highlights */
+  --accent-2: var(--dusty-rose);    /* chips / subtle fills */
+  --link: var(--marsala);           /* links; use rosewater if you want more pop */
+  --ring: rgba(102,54,53,.28);      /* focus/hover ring from marsala */
+  --maxw:980px;
+}
+
+/* keep your existing styles … just update a few neutrals to match */
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  color:var(--ink);
+  background:linear-gradient(180deg,var(--bg) 0%, #fff 60%);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+
+/* accents & borders tuned to the palette */
+h2{ color:#7b4847; }                          /* slightly lighter than marsala for headings */
+.card{ border:1px solid rgba(102,54,53,.14); }
+.btn{ background:var(--accent); color:#fff; }
+.btn.ghost{ background:transparent; color:var(--ink); border:2px solid rgba(102,54,53,.25); }
+.chip{ background:var(--accent-2); color:#5a2e2e; } /* readable text on dusty-rose */
+a{ color:var(--link); text-decoration:none; }
+
 
     /* Tabs (same as index) */
     .tabs{display:flex; gap:.6rem; flex-wrap:wrap; margin:12px 0 8px}
@@ -192,5 +215,4 @@ ITIL® Foundation Certificate in IT Service Management (ITILF)">
   <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
 </body>
 </html>
-
 
