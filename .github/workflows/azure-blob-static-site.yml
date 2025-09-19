@@ -20,122 +20,28 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Azure login
+      - name: Azure login (service principal)
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Ensure subscription
+      - name: Ensure correct subscription
         uses: azure/CLI@v2
         with:
           inlineScript: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # length check (no secret printed)
-      - name: Inspect AZURE_STORAGE_ACCOUNT secret length
-        run: |
-          ACC='${{ secrets.AZURE_STORAGE_ACCOUNT }}'
-          echo "raw_len=$(printf %s "$ACC" | wc -c)"
-          ACC_TRIM=$(printf %s "$ACC" | tr -d ' \r\n')
-          echo "trim_len=$(printf %s "$ACC_TRIM" | wc -c)"
-
-      - name: Deploy context (whoami + target)
-        uses: azure/CLI@v2
-        env:
-          CREDS: ${{ secrets.AZURE_CREDENTIALS }}
-          ACC:   ${{ secrets.AZURE_STORAGE_ACCOUNT }}
-        with:
-          inlineScript: |
-            set -e
-            CLIENT_ID=$(printf '%s' "$CREDS" | sed -n 's/.*"clientId"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
-            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-            echo "== Azure account context =="
-            az account show -o jsonc
-            echo "== SP clientId (first 12) =="; echo "${CLIENT_ID}" | cut -c1-12
-            echo "== Target account =="; echo "$ACC_TRIM"
-            echo "== Endpoint =="; echo "https://${ACC_TRIM}.blob.core.windows.net"
-            echo "== Container =="; echo "\$web"
-
-      # 🔒 Fail fast if SP doesn't have Storage Blob Data * on the storage account
-      - name: Check SP RBAC on storage account (must have role)
-        uses: azure/CLI@v2
-        env:
-          CREDS: ${{ secrets.AZURE_CREDENTIALS }}
-          SUB:   ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ACC:   ${{ secrets.AZURE_STORAGE_ACCOUNT }}
-          RG:    rg-static-website   # <-- change if your RG name is different
-        with:
-          inlineScript: |
-            set -e
-            CLIENT_ID=$(printf '%s' "$CREDS" | sed -n 's/.*"clientId"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
-            SCOPE="/subscriptions/$SUB/resourceGroups/$RG/providers/Microsoft.Storage/storageAccounts/$ACC"
-            echo "Scope: $SCOPE"
-            ROLES=$(az role assignment list --assignee "$CLIENT_ID" --scope "$SCOPE" --query "[].roleDefinitionName" -o tsv)
-            echo "Roles at scope: $ROLES"
-            if [ -z "$ROLES" ] || ! echo "$ROLES" | grep -q "Storage Blob Data"; then
-              echo "::error::Service principal lacks 'Storage Blob Data Contributor' on $SCOPE. In Portal: Storage account → Access control (IAM) → Add role assignment → Storage Blob Data Contributor → select your app by CLIENT ID."
-              exit 1
-            fi
-
-      - name: Quick data-plane test
+      - name: Upload site to $web (AAD)
         uses: azure/CLI@v2
         env:
           ACC: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
         with:
           inlineScript: |
             set -e
-            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-            echo "Static website settings (data plane):"
-            az storage blob service-properties show \
-              --account-name "$ACC_TRIM" \
-              --auth-mode login \
-              --query "{enabled:staticWebsite.enabled, index:staticWebsite.indexDocument}" -o table || true
-
-            echo "List a few blobs from \$web (data plane):"
-            az storage blob list \
-              --account-name "$ACC_TRIM" \
-              --auth-mode login \
-              -c '$web' \
-              --num-results 5 \
-              --query "[].{name:name, modified:properties.lastModified}" -o table || true
-
-      - name: Ensure static website settings
-        uses: azure/CLI@v2
-        env:
-          ACC: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
-        with:
-          inlineScript: |
-            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-            az storage blob service-properties update \
-              --account-name "$ACC_TRIM" \
-              --auth-mode login \
-              --static-website \
-              --index-document index.html \
-              --404-document 404.html
-
-      # Optional: clean $web so container mirrors repo exactly
-      - name: Clean $web container (optional)
-        uses: azure/CLI@v2
-        env:
-          ACC: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
-        with:
-          inlineScript: |
-            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
-            az storage blob delete-batch \
-              --account-name "$ACC_TRIM" \
-              --auth-mode login \
-              -c '$web' --pattern '*'
-
-      - name: Upload site to $web
-        uses: azure/CLI@v2
-        env:
-          ACC: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
-        with:
-          inlineScript: |
             ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
             az storage blob upload-batch \
               --account-name "$ACC_TRIM" \
               --auth-mode login \
-              -d '$web' -s . \
+              -c '$web' -s . \
               --overwrite \
               --no-progress \
               --pattern '!**/.git*' \
