@@ -1,26 +1,45 @@
 [
   {
     "date": "2025-09-19",
-    "title": "Live CI to Azure",
-    "summary": "Site now deploys automatically to Azure Blob Static Website on each push to main using AAD.",
-    "tags": ["Azure", "CI/CD"],
-    "linkHref": "/project.html",
-    "linkText": "See Projects"
+    "title": "Color refresh",
+    "summary": "Switched the site to the new palette with CSS tokens, keeping the pink vibe but with warmer contrast.",
+    "tags": ["Design", "CSS", "Palette"]
   },
   {
     "date": "2025-09-19",
-    "title": "Certifications page",
-    "summary": "New page with grouped, clickable badge images (Atlassian, ITIL/EXIN).",
+    "title": "Latest → powered by JSON + archive page",
+    "summary": "Home now shows the 2 newest updates side by side. Added an Updates page that renders the full timeline.",
+    "tags": ["UI", "JS"],
+    "linkHref": "/updates.html",
+    "linkText": "See all updates"
+  },
+  {
+    "date": "2025-09-19",
+    "title": "CI/CD to Azure ($web) is live",
+    "summary": "GitHub Actions logs in with AAD, ensures the $web container, and uploads the site on every push to main. Fixed auth, RBAC, and upload filters.",
+    "tags": ["Azure", "CI/CD", "GitHub Actions"]
+  },
+  {
+    "date": "2025-09-19",
+    "title": "Certifications page with clickable badges",
+    "summary": "New /certifications.html groups badges (Atlassian, ITIL/EXIN, etc.) with clickable images that link to the official credentials.",
     "tags": ["UI", "Certs"],
     "linkHref": "/certifications.html",
     "linkText": "Open Certifications"
   },
   {
     "date": "2025-09-19",
-    "title": "Trip Pack Planner (AI) — planned",
-    "summary": "Idea for an AI that suggests how many clothing items to pack based on destination, weather and laundry access.",
-    "tags": ["AI", "Planning"],
+    "title": "Projects page stub + first idea",
+    "summary": "Added /project.html with a featured placeholder for the Trip Pack Planner (AI) that will suggest packing counts from destination, dates, and weather.",
+    "tags": ["AI", "Planning", "UI"],
     "linkHref": "/project.html",
-    "linkText": "View plan"
+    "linkText": "See Projects"
+  },
+
+  {
+    "date": "2025-09-15",
+    "title": "Azure static site",
+    "summary": "Hosted this landing on Azure Storage + Cloudflare. HTTPS, custom domain.",
+    "tags": ["Design", "CSS"]
   }
 ]
