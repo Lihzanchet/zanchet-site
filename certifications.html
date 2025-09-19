@@ -6,7 +6,12 @@
   <title>Certifications – Ligia Zanchet</title>
   <meta name="description" content="Cloud, Security and AI certifications held by Ligia Zanchet." />
   <style>
-   :root{
+    :root{
+      --bg:#fff6f8; --ink:#1f2937; --muted:#6b7280; --accent:#e75480; --accent-2:#ffd6e3; --link:#e75480; --ring:rgba(231,84,128,.35);
+      --maxw:980px;
+    }
+    *{box-sizing:border-box}
+  :root{
   /* Tea & Romance */
   --ivory:#f9f1f0;
   --marsala:#663635;
@@ -41,6 +46,8 @@ h2{ color:#7b4847; }                          /* slightly lighter than marsala f
 .chip{ background:var(--accent-2); color:#5a2e2e; } /* readable text on dusty-rose */
 a{ color:var(--link); text-decoration:none; }
 
+    a{color:var(--link); text-decoration:none}
+    .wrap{max-width:var(--maxw); margin:0 auto; padding:32px 20px 56px}
 
     /* Tabs (same as index) */
     .tabs{display:flex; gap:.6rem; flex-wrap:wrap; margin:12px 0 8px}
