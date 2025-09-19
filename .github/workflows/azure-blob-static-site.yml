@@ -44,7 +44,6 @@ jobs:
               --auth-mode login \
               --name '$web' \
               --public-access off \
-              --fail-on-exist false
 
       - name: Upload site to $web (AAD)
         uses: azure/CLI@v2
