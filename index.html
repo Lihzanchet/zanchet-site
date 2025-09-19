@@ -75,15 +75,36 @@ a{ color:var(--link); text-decoration:none; }
     .footer{color:var(--muted); font-size:.9rem; padding-top:22px}
 
 
-@media (min-width: 980px){
-  .photo-wrap{
-     .photo-wrap{ transform: translateX(0.75rem); }
+@media (max-width: 900px){
+  .hero{
+    grid-template-columns: 1fr;   /* stack */
+    gap: 16px;
+    padding: 24px 0 14px;
   }
+
+  .photo-wrap{
+    position: static;             /* disable sticky on mobile */
+    justify-content: center;      /* center the photo */
+    transform: none;              /* cancel any desktop nudge */
+    margin-bottom: 6px;
+  }
+
+  .hero-main{
+    border-left: 0;               /* remove the divider */
+    padding-left: 0;
+  }
+
+  /* Tighter, nicer chips/buttons on small screens */
+  .chips{ gap: .4rem; }
+  .chip{
+    display: inline-block;
+    max-width: 100%;
+    white-space: normal;          /* allow multi-line chips without weird shapes */
+    line-height: 1.15;
+  }
+  .cta{ gap: .5rem; }
+  .btn{ padding: .7rem 1rem; }
 }
-
-    .meta{color:var(--muted); font-size:.98rem}
-    .footer{color:var(--muted); font-size:.9rem; padding-top:22px}
-
 /* HERO: sidebar photo + wide content */
 .hero{
   display: grid;
