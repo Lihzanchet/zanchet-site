@@ -30,6 +30,20 @@ jobs:
         with:
           inlineScript: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: (One-time safe) Ensure static website settings
+        uses: azure/CLI@v2
+        env:
+          ACC: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        with:
+          inlineScript: |
+            ACC_TRIM=$(echo -n "$ACC" | tr -d '\r\n ')
+            az storage blob service-properties update \
+              --account-name "$ACC_TRIM" \
+              --auth-mode login \
+              --static-website \
+              --index-document index.html \
+              --404-document 404.html
+
       - name: Upload site to $web (AAD)
         uses: azure/CLI@v2
         env:
@@ -41,7 +55,8 @@ jobs:
             az storage blob upload-batch \
               --account-name "$ACC_TRIM" \
               --auth-mode login \
-              -c '$web' -s . \
+              --destination '$web' \
+              --source . \
               --overwrite \
               --no-progress \
               --pattern '!**/.git*' \
@@ -57,6 +72,6 @@ jobs:
             az storage blob list \
               --account-name "$ACC_TRIM" \
               --auth-mode login \
-              -c '$web' \
+              --container-name '$web' \
               --num-results 50 \
               --query "[].{name:name, modified:properties.lastModified}" -o table
