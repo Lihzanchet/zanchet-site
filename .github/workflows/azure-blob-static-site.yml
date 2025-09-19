@@ -3,14 +3,7 @@ name: Deploy to Azure Blob Static Website
 on:
   push:
     branches: [ main ]
-    paths:             # deploy only when site files change
-      - '**/*.html'
-      - '**/*.css'
-      - '**/*.js'
-      - 'img/**'
-      - 'data/**'
-      - '!**/*.md'
-  workflow_dispatch:   # manual run button
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -27,30 +20,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # --- Option A: login with secret JSON (what you have now) ---
-      - name: Azure login (service principal)
-        if: ${{ secrets.AZURE_CREDENTIALS != '' }}
+      - name: Azure login (service principal JSON)
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      # --- Option B: login via OIDC (preferred; no long-lived secret) ---
-      #   To use this, set AZURE_CLIENT_ID and AZURE_TENANT_ID repo secrets and
-      #   add a federated credential to your app registration for this repo/branch.
-      - name: Azure login (OIDC)
-        if: ${{ secrets.AZURE_CREDENTIALS == '' }}
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Set subscription
         uses: azure/CLI@v2
         with:
           inlineScript: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Create $web if missing (idempotent)
+      # Creates $web if missing (idempotent)
       - name: Ensure $web container exists (AAD)
         uses: azure/CLI@v2
         env:
@@ -65,7 +45,6 @@ jobs:
               --name '$web' \
               --public-access off
 
-      # Upload site (excludes .git and workflows)
       - name: Upload site to $web (AAD)
         uses: azure/CLI@v2
         env:
@@ -84,7 +63,6 @@ jobs:
               --pattern '!**/.git*' \
               --pattern '!**/.github/**'
 
-      # Proof
       - name: List uploaded files (proof)
         uses: azure/CLI@v2
         env:
