@@ -7,8 +7,9 @@ mkdir -p "$DEST"
 
 echo "Listing recent $N photos from DCIM/Camera..."
 # Index on device, most-recent first
-LIST=$(adb shell "ls -1t /sdcard/DCIM/Camera/*.jpg 2>/dev/null | head -n $N" | tr -d '\r')
-
+LIST=$(adb shell 'for d in /sdcard/DCIM/Camera /sdcard/DCIM /sdcard/Pictures /sdcard/Pictures/Screenshots /sdcard/Download; do ls -1t "$d"/* 2>/dev/null; done' \
+  | tr -d '\r' \
+  | head -n "${N}")
 if [ -z "$LIST" ]; then
   echo "No photos found." && exit 0
 fi
