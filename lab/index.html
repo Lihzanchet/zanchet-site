@@ -1,1 +1,44 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Travel Lab – ADB & Linux Mini Demos</title>
+<link rel="stylesheet" href="styles.css" />
+<body>
+  <main>
+    <h1>🧳 Travel Lab</h1>
+    <p>Three tiny demos that prove I can poke a phone with <strong>ADB</strong> and wrangle files with <strong>Linux</strong>.</p>
 
+    <section>
+      <h2>1) Pre-trip Quickcheck</h2>
+      <p>Lists device, Android version, battery %, Wi-Fi, storage, timezone.</p>
+      <a class="btn" href="../scripts/travel_adb_quickcheck.sh" download>Download script</a>
+      <a class="ghost" href="sample-output/quickcheck.txt">See sample output</a>
+    </section>
+
+    <section>
+      <h2>2) Postcard Screenshot</h2>
+      <p>Takes a screenshot on device and pulls it locally. It’s silly, but it’s travel-themed 💌.</p>
+      <a class="btn" href="../scripts/travel_adb_screenshot_pull.sh" download>Download script</a>
+      <a class="ghost" href="sample-output/screenshot-pull.txt">See sample output</a>
+    </section>
+
+    <section>
+      <h2>3) Quick Photo Sync</h2>
+      <p>Pulls your latest <code>N</code> photos and zips them with a checksum.</p>
+      <a class="btn" href="../scripts/travel_adb_sync_photos.sh" download>Download script</a>
+      <a class="ghost" href="sample-output/sync-photos.txt">See sample output</a>
+    </section>
+
+    <hr />
+    <details>
+      <summary>How I’d extend this (if needed)</summary>
+      <ul>
+        <li>Wi-Fi ADB flow, no USB.</li>
+        <li>Exif to GPX (awk/sed) → map trace.</li>
+        <li>asciinema cast of a live run on Linux.</li>
+      </ul>
+    </details>
+  </main>
+</body>
+</html>
